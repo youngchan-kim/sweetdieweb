@@ -115,7 +115,7 @@
                     const classPrediction =
                         prediction[i].className + ': ' + prediction[i].probability.toFixed(2);
                     labelContainer.childNodes[i].innerHTML = classPrediction;
-                }
+                
                 if (prediction[0].className == "귤" && prediction[0].probability.toFixed(2) == 1.00) {
                 labelContainer.childNodes[0].innerHTML = "귤의 껍질은 귤피(橘皮, flavedo)라 하고 껍질 안쪽의 하얀 부분을 귤락(橘絡, albedo)이라고 한다.\
                 귤피에서 귤락을 제거한 것은 귤홍(橘紅)이라 한다.\
@@ -151,6 +151,7 @@
                 labelContainer.childNodes[0].innerHTML = "아무것도 일치하지 않습니다. 추가 학습하여 주세요."
             }
             }
+        }
         </script>
     </body>
     <!-- Copyright (c) 2021 by Aaron Vanston (https://codepen.io/aaronvanston/pen/yNYOXR)
