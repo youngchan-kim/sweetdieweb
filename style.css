@@ -137,7 +137,21 @@ body {
     border: 0;
     transition: all 0.2s ease;
 }
-#label-container {
+#label-container1 {
+    max-width: 90vw;
+    margin: 0 auto;
+    font-family: auto;
+    font-size: 2vw;
+    font-weight: 100;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: center;
+}
+#label-container2 {
+    position: absolute;
+    top:5wv;
+    left:5wv;
     max-width: 90vw;
     margin: 0 auto;
     font-family: auto;
