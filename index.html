@@ -21,12 +21,11 @@
         <h2 class="guid">과일 사진을 넣어주세요</h2>
         <div class="container file-upload">
             <div class="image-upload-wrap">
-                
                 <div class="drag-text">
-                    <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" >
+                    <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*">
                     <img src="./img/a.jpg" class="mt-2 upload">
                     <h3 class="container mb-2 upload-text">Drag and drop a file or select add Image</h3>
-                </input>
+                    </input>
                 </div>
             </div>
 
@@ -39,11 +38,13 @@
                 </div>
             </div>
         </div>
-        <div id="label-container"><div class="label-container-cover"></div></div>  
+        <div id="label-container">
+            <div class="label-container-cover"></div>
+        </div>
     </section>
 
     <section class="btn">
-        
+
         <div class="bt1" type="button" onclick="init()">
             <h class="start">시작</h>
         </div>
@@ -52,10 +53,10 @@
             <h class="prediction">정보확인</h>
         </div>
     </section>
-       
-  
-        
-    
+
+
+
+
     <!-- <div id="label-container"></div> -->
     <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
@@ -112,13 +113,12 @@
 
         // the link to your model provided by Teachable Machine export panel
         const URL = "./my_model/";
+        let model, webcam, labelContainer1, labelContainer2, maxPredictions;
 
-        let model, labelContainer, maxPredictions;
-
-        // Load the image model and setup the 
+        // Load the image model and setup the webcam
         async function init() {
-            const modelURL = URL + "model.json";
-            const metadataURL = URL + "metadata.json";
+            const modelURL = URL + 'model.json';
+            const metadataURL = URL + 'metadata.json';
 
             // load the model and metadata
             // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
@@ -127,30 +127,41 @@
             model = await tmImage.load(modelURL, metadataURL);
             maxPredictions = model.getTotalClasses();
 
-            // append elements to the DOM
-            labelContainer = document.getElementById("label-container");
-            for (let i = 0; i < maxPredictions; i++) { // and class labels
-                labelContainer.appendChild(document.createElement("div"));
+
+            labelContainer1 = document.getElementById('label-container');
+            for (let i = 0; i < maxPredictions; i++) {
+                // and class labels
+                labelContainer1.appendChild(document.createElement('div'));
+            }
+            labelContainer2 = document.getElementById('label-container');
+            for (let i = 0; i < maxPredictions; i++) {
+                // and class labels
+                labelContainer2.appendChild(document.createElement('div'));
             }
         }
 
-        // run the  image through the image model
+        // run the webcam image through the image model
         async function predict() {
             // predict can take in an image, video or canvas html element
-            var image = document.getElementById("face-image") /// id is face-image
+            var image = document.getElementById('face-image');
             const prediction = await model.predict(image, false);
-            if (prediction[0].className == "귤" && prediction[0].probability.toFixed(2) == 1.00) {
-                labelContainer.childNodes[0].innerHTML = "귤의 껍질은 귤피(橘皮, flavedo)라 하고 껍질 안쪽의 하얀 부분을 귤락(橘絡, albedo)이라고 한다.\
+            for (let i = 0; i < maxPredictions; i++) {
+                const classPrediction =
+                    prediction[i].className + ': ' + prediction[i].probability.toFixed(2);
+                labelContainer1.childNodes[i].innerHTML = classPrediction;
+
+                if (prediction[0].className == "귤" && prediction[0].probability.toFixed(2) == 1.00) {
+                    labelContainer2.childNodes[0].innerHTML = "귤의 껍질은 귤피(橘皮, flavedo)라 하고 껍질 안쪽의 하얀 부분을 귤락(橘絡, albedo)이라고 한다.\
                 귤피에서 귤락을 제거한 것은 귤홍(橘紅)이라 한다.\
                 잘 익은 귤의 껍질을 말린 것은 진피(陳皮)라 하고 덜 익은 파란 귤의 껍질은 청피(靑皮)라 한다.\
                 귤락, 진피, 청피 등은 약재로 쓰거나 차를 달이기도 한다."
-            } else if (prediction[1].className == "딸기" && prediction[1].probability.toFixed(2) == 1.00) {
-                labelContainer.childNodes[0].innerHTML = "12월 상순부터 6월 상순까지 신선한 딸기가 출하된다.\
+                } else if (prediction[1].className == "딸기" && prediction[1].probability.toFixed(2) == 1.00) {
+                    labelContainer2.childNodes[0].innerHTML = "12월 상순부터 6월 상순까지 신선한 딸기가 출하된다.\
                 생딸기는 딸기를 물로 씻은 후 그대로 먹거나 또는 설탕과 우유를 넣어서 먹어도 좋다. 쇼트케이크·샐러드에도 이용된다.\
                 냉동 이용방법은 물로 씻은 후 영하 1℃에서 하루 정도 차게 하고, 여기에 설탕 30-40%를 넣고 동결시켜 영하 20℃로 저장한다.\
                 이것은 그대로 이용할 수 있으며 또한 가공원료로도 쓰이고 냉동수송에도 적합하다. 잼이나 프리즈업으로도 많이 이용된다."
-            } else if (prediction[2].className = "망고스틴" && prediction[2].probability.toFixed(2) == 1.00) {
-                labelContainer.childNodes[0].innerHTML = "키는 9.5m 까지 자라며 한 나무에서 한 계절에 1000개 이상의 열매를 얻는다.\
+                } else if (prediction[2].className = "망고스틴" && prediction[2].probability.toFixed(2) == 1.00) {
+                    labelContainer2.childNodes[0].innerHTML = "키는 9.5m 까지 자라며 한 나무에서 한 계절에 1000개 이상의 열매를 얻는다.\
                 잎은 암녹색으로 두껍고광택이 나며 길이가 15-25cm이고, 장밋빛의 큰 꽃이 핀다.열매는 크기가 작은 오렌지만하고 둥글거나 납작하다.\
                 눈처럼 흰 다육질의 과육은 두껍고 단단한 진홍색껍질이 둘러싸고 있으며 만다린 오렌지와 비슷하게 여러 조각으로 갈라져있다.\
                 즙이 많고 결이 섬세하며 새콤하면서도 약간 떫은맛이 나는 특징을 귀하게 여겨 옛날부터 자와섬, 수마트라, 인도차이나, 필리핀 남부 등에서 재배되어왔다.\
@@ -159,23 +170,24 @@
                 나무에 달린 채로 열매가 익어야 하고, 보존 가능한 기간도 짧기 때문에 생산지방의 상점에서만 찾아볼 수 있다.\
                 어린 나무가 열매를 맺기까지 8-15년이 결리며 한 해 걸러 1번씩 좋은 열매를 얻을 수 있다.\
                     망고스틴은 대영제국 빅토리아 여왕이 즐겨먹었다 해서 과일의 여왕으로 칭해진다. 카리브 해 지역에서는 ‘신들의 음식’이라고 불릴 만큼 유명한 열대과일이다."
-            } else if (prediction[3].className = "사과" && prediction[3].probability.toFixed(2) == 1.00) {
-                labelContainer.childNodes[0].innerHTML = "과육은 기본적으로 노란색~연두색[1]이며, 맛은 품종마다 다르다. 아래 사과 품종 문단을 참고하자.\
+                } else if (prediction[3].className = "사과" && prediction[3].probability.toFixed(2) == 1.00) {
+                    labelContainer2.childNodes[0].innerHTML = "과육은 기본적으로 노란색~연두색[1]이며, 맛은 품종마다 다르다. 아래 사과 품종 문단을 참고하자.\
                 일반적으로 한국에서 말하는 사과 맛은 달콤새콤 + 아삭아삭하게 씹히는 탄력이 있고 단단한 과육의 식감을 말한다.\
                 야생 사과는 키르기스스탄과 중국 서부에 위치한 톈산 산맥과 타림 분지가 원산지로, 이후 전 세계에 퍼지게 되었다.\
                     참고로 다른 과일인 배와 복숭아도 같은 지역이 원산지이다."
-            } else if (prediction[4].className = "포도" && prediction[4].probability.toFixed(2) == 1.00) {
-                labelContainer.childNodes[0].innerHTML = "포도(葡萄, grape)는 포도속(Vitis) 식물의 총칭, 또는 그 열매를 말한다\
+                } else if (prediction[4].className = "포도" && prediction[4].probability.toFixed(2) == 1.00) {
+                    labelContainer2.childNodes[0].innerHTML = "포도(葡萄, grape)는 포도속(Vitis) 식물의 총칭, 또는 그 열매를 말한다\
                 포도의 품종에는 포도(V. vinifera)·미국포도(V. labrusca)·교배종이 있다.\
                 포도(V. vinifera)는 전파 과정에 따라 남유럽계·중앙아시아계·동아시아계 등의 재배형으로 분화하였으며, 오늘날까지 총 15만 여 품종이 만들어졌다.\
                 포도 열매는 가공되지 않은 상태로도 먹을 수 있는 과일이며, 포도주, 주스, 젤리 등을 만드는 데에도 사용된다. 건포도를 만들어 사용하기도 한다.\
                     흔히 볼 수 있는 보라색의 포도 외에도 붉은색, 보라색, 흰색, 녹색 등 다양한 색의 종이 있다."
-            } else {
-                labelContainer.childNodes[0].innerHTML = "아무것도 일치하지 않습니다. 추가 학습하여 주세요."
+                } else {
+                    labelContainer2.childNodes[0].innerHTML = "아무것도 일치하지 않습니다. 추가 학습하여 주세요."
+                }
             }
-
         }
     </script>
+
 </body>
 <!-- Copyright (c) 2020 by Aaron Vanston (https://codepen.io/aaronvanston/pen/yNYOXR)
 
